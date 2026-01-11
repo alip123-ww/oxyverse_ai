@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>OXYVERSE // FIXED</title>
+    <title>OXYVERSE // MOBILE FIX</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -32,7 +32,6 @@
             --text-mute: #707070;
             
             --header-h: 70px;
-            --dock-h: 90px; /* Estimasi tinggi dock */
         }
 
         /* MODE: JAILBREAK (RED) */
@@ -49,7 +48,7 @@
         body {
             background-color: var(--bg-void);
             color: var(--text-main); 
-            height: 100vh; height: 100dvh; /* Mobile Fix */
+            height: 100vh; height: 100dvh; /* Mobile Height Fix */
             overflow: hidden;
             font-family: var(--font-ui); font-size: 15px;
             transition: background 0.5s ease;
@@ -65,7 +64,7 @@
         #mobile-overlay {
             position: fixed; inset: 0; 
             background: rgba(0,0,0,0.6); 
-            z-index: 1999;
+            z-index: 1500; /* Layered below Menu but above content */
             opacity: 0; pointer-events: none; transition: 0.3s;
             backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
         }
@@ -129,7 +128,8 @@
             backdrop-filter: var(--backdrop); -webkit-backdrop-filter: var(--backdrop);
             border-right: 1px solid var(--glass-border);
             display: flex; flex-direction: column; padding: 25px 20px; gap: 20px;
-            z-index: 2000; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1600; /* Sidebar above overlay */
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative; flex-shrink: 0;
         }
 
@@ -156,22 +156,28 @@
         .btn-new:hover { background: var(--primary-dim); border-color: var(--primary); }
 
         #history-list { flex: 1; overflow-y: auto; padding-right: 5px; }
+        
         .node-row {
             padding: 12px; margin-bottom: 5px; border-radius: 10px;
             color: var(--text-mute); cursor: pointer; font-size: 0.9rem;
             display: flex; align-items: center; justify-content: space-between; gap: 10px; transition: 0.2s;
             border: 1px solid transparent; font-family: var(--font-ui);
+            position: relative; /* Context for dots */
         }
         .node-row:hover { background: rgba(255,255,255,0.05); color: #fff; }
         .node-row.active { 
             background: linear-gradient(90deg, var(--primary-dim), transparent); 
             border-left: 3px solid var(--primary); color: #fff;
         }
-        .node-opts { opacity: 0; transition: 0.2s; padding: 5px; }
+        /* Increased Hit Area for Mobile */
+        .node-opts { 
+            opacity: 0.7; transition: 0.2s; padding: 10px; /* Bigger touch target */
+            display: flex; align-items: center; justify-content: center;
+        }
         .node-row:hover .node-opts { opacity: 1; }
-        .node-opts:hover { color: var(--primary); }
+        .node-opts:hover { color: var(--primary); background: rgba(255,255,255,0.1); border-radius: 50%; }
 
-        /* MAIN AREA (FIXED FOR MOBILE INPUT) */
+        /* MAIN AREA */
         main { 
             flex: 1; min-width: 0; 
             display: flex; flex-direction: column; 
@@ -219,7 +225,7 @@
             flex: 1; 
             overflow-y: auto; 
             padding: 20px 0;
-            padding-bottom: 120px; /* CRITICAL: Space for Dock Area */
+            padding-bottom: 120px;
             display: flex; flex-direction: column; gap: 25px;
             scroll-behavior: smooth;
         }
@@ -248,7 +254,6 @@
             box-shadow: var(--shadow); border: 1px solid rgba(255,255,255,0.2);
         }
 
-        /* MARKDOWN ELEMENTS */
         .bubble h1, .bubble h2 { color: #fff; margin-top: 20px; margin-bottom: 10px; font-weight: 700; font-size: 1.2em; }
         .bubble p { margin-bottom: 12px; }
         .bubble ul { margin: 10px 0 15px 20px; }
@@ -281,13 +286,13 @@
 
         .bubble img { max-width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--glass-border); margin-top: 10px; }
 
-        /* === INPUT AREA (DOCKED FIX) === */
+        /* === DOCK AREA === */
         .dock-area { 
             position: absolute; bottom: 0; left: 0; width: 100%;
             padding: 15px 0 25px 0; 
             z-index: 20; 
             display: flex; justify-content: center;
-            background: linear-gradient(to top, var(--bg-void) 80%, transparent); /* Fade background */
+            background: linear-gradient(to top, var(--bg-void) 80%, transparent);
         }
         .input-shell {
             width: 92%; max-width: 900px;
@@ -330,16 +335,19 @@
         .btn-send.stop { background: #ff0055; color: #fff; animation: pulse 1.5s infinite; }
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 77, 77, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(255, 77, 77, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 77, 77, 0); } }
 
-        /* MENU */
+        /* === MENU FIX (ULTIMATE Z-INDEX) === */
         #ctx-menu { 
-            position: fixed; z-index: 3000; display: none; width: 150px; 
-            background: rgba(20, 20, 25, 0.95); backdrop-filter: blur(15px);
-            border: 1px solid var(--glass-border); border-radius: 12px; padding: 6px; 
-            box-shadow: 0 10px 50px rgba(0,0,0,0.6); 
+            position: fixed; 
+            z-index: 99999 !important; /* FORCED TOP LAYER */
+            display: none; width: 150px; 
+            background: #0a0a0c; 
+            border: 1px solid var(--primary); /* Neon Border */
+            border-radius: 12px; padding: 6px; 
+            box-shadow: 0 0 30px rgba(0,0,0,0.9); 
         }
         .ctx-item { padding: 10px 14px; font-size: 0.9rem; color: #ccc; border-radius: 8px; cursor: pointer; transition: 0.2s; }
-        .ctx-item:hover { background: rgba(255,255,255,0.1); color: #fff; }
-        .ctx-item.del:hover { background: rgba(255, 0, 85, 0.2); color: #ff0055; }
+        .ctx-item:hover { background: var(--primary); color: #000; }
+        .ctx-item.del:hover { background: #ff003c; color: #fff; }
 
         /* === RESPONSIVE MEDIA QUERIES === */
         @media (max-width: 768px) {
@@ -349,7 +357,7 @@
                 transform: translateX(-100%);
                 height: 100%;
                 box-shadow: 10px 0 50px rgba(0,0,0,0.5);
-                z-index: 2000;
+                z-index: 2000; /* Sidebar Layer */
             }
             aside.active { transform: translateX(0); }
             
@@ -378,7 +386,7 @@
         <div class="auth-container">
             <div class="auth-box">
                 <div class="glitch-logo">OXYVERSE</div>
-                <div class="auth-sub">DOCKED FIX EDITION</div>
+                <div class="auth-sub">TOUCH OPTIMIZED</div>
                 <form onsubmit="handleLogin(event)">
                     <input type="text" id="log-user" class="inp-cyber" placeholder="OPERATOR ID" required autocomplete="off">
                     <input type="password" id="log-key" class="inp-cyber" placeholder="PASSKEY (9999)" required maxlength="4" style="font-weight:bold;">
@@ -457,7 +465,7 @@
     </div>
 
     <script>
-        /* === SYSTEM CORE v52 (DOCKED FIX) === */
+        /* === SYSTEM CORE v53 (TOUCH OPTIMIZED) === */
         const CORRECT_KEY = "9999";
         const KEYS = {
             'WORM': 'sk-or-v1-hT20bbtIFYLyFmLOWFiGsskymntzCh2Ng5PX',
@@ -465,11 +473,11 @@
         };
         
         let curMode = 'JAILBREAK'; 
-        let user = JSON.parse(localStorage.getItem('oxy_v52_user'));
-        let sessions = JSON.parse(localStorage.getItem('oxy_v52_sessions')) || [];
+        let user = JSON.parse(localStorage.getItem('oxy_v53_user'));
+        let sessions = JSON.parse(localStorage.getItem('oxy_v53_sessions')) || [];
         let curId = null, selFile = null, controller = null, busy = false, menuId = null;
 
-        // Init Marked (Native Links)
+        // Init Marked
         const renderer = new marked.Renderer();
         renderer.link = function(href, title, text) {
             return `<a href="${href}" target="_blank" rel="noopener noreferrer" title="${title||href}">${text}</a>`;
@@ -506,7 +514,7 @@
             if(k.value !== CORRECT_KEY) { k.classList.add('shake'); k.value=''; setTimeout(()=>k.classList.remove('shake'), 500); return; }
             
             const newUser = { name: u, avatar: u.charAt(0).toUpperCase() };
-            localStorage.setItem('oxy_v52_user', JSON.stringify(newUser));
+            localStorage.setItem('oxy_v53_user', JSON.stringify(newUser));
             user = newUser;
             
             document.getElementById('auth-layer').style.opacity='0';
@@ -516,7 +524,7 @@
                 enterApp(false);
             }, 600);
         }
-        function logout() { if(confirm("Terminate?")) { localStorage.removeItem('oxy_v52_user'); location.reload(); } }
+        function logout() { if(confirm("Terminate?")) { localStorage.removeItem('oxy_v53_user'); location.reload(); } }
         function enterApp(skip) {
             document.getElementById('u-name').innerText = user.name;
             document.getElementById('u-avi').innerText = user.avatar;
@@ -662,7 +670,6 @@
             });
         }
 
-        /* === GLOBAL COPY & FILE === */
         function copyAllChat() {
             const s = sessions.find(x => x.id === curId);
             if (!s) return;
@@ -670,7 +677,6 @@
             navigator.clipboard.writeText(log).then(() => alert('Log Copied!'));
         }
 
-        /* === CANVAS PARTICLES === */
         function initParticles() {
             const c = document.getElementById('bg-canvas');
             const ctx = c.getContext('2d');
@@ -699,7 +705,6 @@
             ani();
         }
 
-        /* === HISTORY & INIT === */
         function initChat() { if(sessions.length>0) loadChat(sessions[0].id); else startNewChat(); renderHist(); }
         function startNewChat() {
             curId = Date.now().toString();
@@ -731,21 +736,23 @@
                 el.innerHTML += `<div class="node-row ${active}" onclick="loadChat('${s.id}')"><span>${pin}${s.title}</span><i class="fas fa-ellipsis-v node-opts" onclick="openCtx(event,'${s.id}')"></i></div>`;
             });
         }
-        function save() { localStorage.setItem('oxy_v52_sessions', JSON.stringify(sessions)); }
+        function save() { localStorage.setItem('oxy_v53_sessions', JSON.stringify(sessions)); }
         function scrollToBottom() { const b = document.getElementById('chat-view'); b.scrollTop = b.scrollHeight; }
 
+        /* === FIXED TOUCH CONTEXT MENU === */
         function openCtx(e, id) { 
             e.stopPropagation(); 
+            e.preventDefault(); // Stop ghost clicks
             menuId = id; 
             const m = document.getElementById('ctx-menu');
             
-            // Positioning Logic Fix (Near Mouse but Safe)
-            let x = e.clientX + 10;
-            let y = e.clientY + 10;
+            // Smart Position Calculation
+            let x = e.clientX || (e.touches && e.touches[0].clientX);
+            let y = e.clientY || (e.touches && e.touches[0].clientY);
             
-            // Prevent off-screen
-            if (x + 160 > window.innerWidth) x = e.clientX - 160;
-            if (y + 120 > window.innerHeight) y = e.clientY - 120;
+            // Adjust if near screen edge
+            if (x + 160 > window.innerWidth) x = window.innerWidth - 170;
+            if (y + 120 > window.innerHeight) y = window.innerHeight - 130;
 
             m.style.display = 'block'; 
             m.style.top = y + 'px'; 
